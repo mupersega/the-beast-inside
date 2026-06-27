@@ -1,0 +1,14 @@
+# Air live-reload
+/tmp/
+build-errors.log
+
+# Static build output (built in CI by `go run . build`)
+/dist/
+
+# Build output
+/tbi.exe
+*.exe
+
+# Playwright / local verification artifacts
+/.playwright-mcp/
+*.png

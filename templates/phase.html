@@ -1,0 +1,16 @@
+{{define "phase"}}
+<article class="day-card">
+  <button class="day-close" type="button" data-phase-close
+          aria-label="Close {{.Weeks}}">Close</button>
+
+  <p class="marker">{{.Weeks}} &middot; {{.Label}}</p>
+  <h3 class="name">{{.Name}}</h3>
+  <p class="tagline">{{.Tagline}}</p>
+
+  <ol class="blocks">
+    {{range .Detail}}
+    <li><span class="bname">{{.Name}}</span><span class="bdetail">{{.Detail}}</span></li>
+    {{end}}
+  </ol>
+</article>
+{{end}}

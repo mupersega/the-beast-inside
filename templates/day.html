@@ -1,0 +1,23 @@
+{{define "day"}}
+<article class="day-card">
+  <button class="day-close" type="button"
+          onclick="this.closest('#panel').innerHTML=''"
+          aria-label="Close {{.Name}}">Close</button>
+
+  {{if .Img}}<img class="day-img" src="{{.Img}}" alt="">{{end}}
+  <p class="marker">{{.Name}} &middot; {{.Tool}}</p>
+  <h2 class="name">{{.Title}}</h2>
+  <p class="tagline">{{.Tagline}}</p>
+
+  {{if .Blocks}}
+  <ol class="blocks">
+    {{range .Blocks}}
+    <li><span class="bname">{{.Name}}</span><span class="bdetail">{{.Detail}}</span></li>
+    {{end}}
+  </ol>
+  {{if .Note}}<p class="day-note">{{.Note}}</p>{{end}}
+  {{else}}
+  <p class="day-soon">{{.Soon}}</p>
+  {{end}}
+</article>
+{{end}}

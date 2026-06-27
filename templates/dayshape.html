@@ -1,0 +1,13 @@
+{{/* dayshape — ONE crisp <path> behind each day-circle. At rest it's a pristine
+     circle (identical for all three) so the resting Venn / triquetra overlap in
+     the middle is clean. On open the SAME points conform to the object that day
+     references — barbell, kettlebell or human — a genuine reshape, not a swap.
+     Each path is two sub-paths (90-pt outline + 18-pt inner loop) so the circle,
+     the icons and the kettlebell's grip hole all interpolate 1:1 via the CSS `d`
+     transition in app.css. The d="" here is the closed circle (also a fallback
+     for engines that don't animate `d`). preserveAspectRatio="none" + a square
+     open box keep the silhouettes at true proportions. Shapes come from the
+     scratchpad gen-icons.js generator. */}}
+{{define "dayshape"}}<svg class="day-shape" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <path class="shp" d="M50.00,3.50 L53.24,3.61 L56.47,3.95 L59.67,4.52 L62.82,5.30 L65.90,6.30 L68.91,7.52 L71.83,8.94 L74.64,10.57 L77.33,12.38 L79.89,14.38 L82.30,16.55 L84.56,18.89 L86.64,21.37 L88.55,24.00 L90.27,26.75 L91.79,29.62 L93.11,32.58 L94.22,35.63 L95.12,38.75 L95.79,41.93 L96.24,45.14 L96.47,48.38 L96.47,51.62 L96.24,54.86 L95.79,58.07 L95.12,61.25 L94.22,64.37 L93.11,67.42 L91.79,70.38 L90.27,73.25 L88.55,76.00 L86.64,78.63 L84.56,81.11 L82.30,83.45 L79.89,85.62 L77.33,87.62 L74.64,89.43 L71.83,91.06 L68.91,92.48 L65.90,93.69 L62.82,94.70 L59.67,95.48 L56.47,96.05 L53.24,96.39 L50.00,96.50 L46.76,96.39 L43.53,96.05 L40.33,95.48 L37.18,94.70 L34.10,93.69 L31.09,92.48 L28.17,91.06 L25.36,89.43 L22.67,87.62 L20.11,85.62 L17.70,83.45 L15.44,81.11 L13.36,78.63 L11.45,76.00 L9.73,73.25 L8.21,70.38 L6.89,67.42 L5.78,64.37 L4.88,61.25 L4.21,58.07 L3.76,54.86 L3.53,51.62 L3.53,48.38 L3.76,45.14 L4.21,41.93 L4.88,38.75 L5.78,35.63 L6.89,32.58 L8.21,29.62 L9.73,26.75 L11.45,24.00 L13.36,21.37 L15.44,18.89 L17.70,16.55 L20.11,14.38 L22.67,12.38 L25.36,10.57 L28.17,8.94 L31.09,7.52 L34.10,6.30 L37.18,5.30 L40.33,4.52 L43.53,3.95 L46.76,3.61 Z M50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 Z"/>
+</svg>{{end}}

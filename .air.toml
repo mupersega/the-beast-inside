@@ -1,0 +1,32 @@
+# Air live-reload — https://github.com/air-verse/air
+#   Dev:   air        → open http://localhost:8090  (proxied; auto-refreshes on change)
+#   Prod:  go build -o tbi.exe . && ./tbi.exe   (no Air; serves on :8080)
+#
+# Templates and static assets are go:embed-ed into the binary, so a REBUILD is
+# what makes .html / .css edits take effect — Air watches those extensions and
+# rebuilds, then its proxy refreshes the browser.
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main.exe ."
+  bin = "./tmp/main.exe"
+  include_ext = ["go", "html", "css", "js", "svg", "jpg", "jpeg", "png", "webp", "woff2"]
+  exclude_dir = ["tmp", ".git", ".playwright-mcp"]
+  exclude_regex = ["_test\\.go"]
+  delay = 150            # ms to debounce rapid saves
+  send_interrupt = true  # signal the app so it can shut down gracefully...
+  kill_delay = "2s"      # ...then wait for it to release :8080 before restart
+  stop_on_error = true
+
+[proxy]
+  enabled = true
+  proxy_port = 8090     # ← open THIS in the browser
+  app_port = 8080       # the Go server's own port (main.go default)
+
+[misc]
+  clean_on_exit = true
+
+[screen]
+  clear_on_rebuild = false
