@@ -49,28 +49,22 @@ type Day struct {
 }
 
 // days holds the three sessions in order: Kettlebell, Barbell, Body Work.
-// Day Two (barbell) is programmed; One and Three are stubbed until the plan lands.
+// The hero circles show each day's Tagline; the week-by-week detail lives in the
+// phases below (taken from Sam's program outline).
 var days = map[int]Day{
 	1: {
 		Num: 1, Name: "Day One", Tool: "Kettlebell", Title: "Kettlebell",
-		Tagline: "Kettlebell work - swings, cleans, presses and carries for power and conditioning.",
+		Tagline: "Kettlebell work - two-hand swings and Turkish get-ups, building to Simple & Sinister.",
 		Soon:    "Full session details coming soon.",
 	},
 	2: {
 		Num: 2, Name: "Day Two", Tool: "Barbell", Title: "Barbell",
-		Tagline: "Big barbell lifts - squat, press and deadlift - done heavy and simple.",
-		Blocks: []Block{
-			{"Prime", "8 min - hips, spine, shoulders. Empty bar, then build."},
-			{"Main lift", "Back Squat · 5×5 · leave one rep in the tank"},
-			{"Press", "Overhead Press · 5×3 · strict, no leg drive"},
-			{"Pull", "Barbell Row or Deadlift · 4×6"},
-			{"Finisher", "Loaded carry & breathe · 3 rounds"},
-		},
-		Note: "Sets, reps and loads are set in your session.",
+		Tagline: "The three big lifts - deadlift, Zercher squat and military press - built to a heavy 3RM.",
+		Soon:    "Full session details coming soon.",
 	},
 	3: {
 		Num: 3, Name: "Day Three", Tool: "Body Work", Title: "Body Work",
-		Tagline: "Bodyweight training - push, pull, hinge and core. Train anywhere.",
+		Tagline: "Bodyweight strength - push-ups, pull-ups and squats - full-body connection and control.",
 		Soon:    "Full session details coming soon.",
 	},
 }
@@ -93,8 +87,9 @@ const spotsTotal = 8
 // marked placeholder; Sam sets this to a real number (0..8) when an intake opens.
 var spotsLeft = -1
 
-// Phase is one stage of the 8-week arc. The three named phases (week 1, week 2,
-// weeks 3-7) echo the "three" motif; week 8 is the finale. Copy is placeholder.
+// Phase is one stage of the 8-week arc (Week 1, Week 2, Weeks 3-7, Week 8).
+// Detail is that week's three days (kettlebell, barbell, body weight), taken
+// from Sam's program outline.
 type Phase struct {
 	Num     int
 	Weeks   string // "Week 1", "Weeks 3-7"
@@ -109,36 +104,36 @@ var phases = []Phase{
 		Num: 1, Weeks: "Week 1", Label: "Phase One", Name: "Foundation",
 		Tagline: "Learn the lifts and set your starting numbers.",
 		Detail: []Block{
-			{"Movement", "Grease the patterns - squat, hinge, press, carry - at honest, easy loads."},
-			{"Intent", "No ego. We baseline every lift so we know exactly what we're working with."},
-			{"The three days", "Barbell, bell and body, all introduced light. Form is the only metric."},
+			{"Kettlebell", "Learn the two-hand swing and the Turkish get-up. Finish with a simple test."},
+			{"Barbell", "Learn the three big lifts - deadlift, Zercher squat and military press. Finish by finding your 3RM."},
+			{"Body weight", "Learn full-body connection and the push-up, pull-up and squat / split squat. Finish with a max test."},
 		},
 	},
 	{
-		Num: 2, Weeks: "Week 2", Label: "Phase Two", Name: "Build",
-		Tagline: "Add weight and settle into the routine.",
+		Num: 2, Weeks: "Week 2", Label: "Phase Two", Name: "Practice",
+		Tagline: "Recap the foundations, then put them into practice.",
 		Detail: []Block{
-			{"Movement", "Same lifts, real weight. Sets and reps step up across all three days."},
-			{"Intent", "Build work capacity and confidence under load before the long block."},
-			{"The three days", "Barbell strength, kettlebell power, bodyweight control - dialled in."},
+			{"Kettlebell", "Recap the swing and the get-up, then put them into practice."},
+			{"Barbell", "Recap the deadlift, Zercher squat and military press, then put them into practice."},
+			{"Body weight", "Recap the push-up, pull-up and squat patterns, then put them into practice."},
 		},
 	},
 	{
 		Num: 3, Weeks: "Weeks 3-7", Label: "Phase Three", Name: "Overload",
-		Tagline: "The main block - a little more each week.",
+		Tagline: "The program proper - a little more each week.",
 		Detail: []Block{
-			{"Movement", "Five weeks of steady climb: more load, tighter execution, earned every session."},
-			{"Intent", "Adapt and overload. The week repeats so the work compounds."},
-			{"The three days", "Each day pushes its own edge - heavy iron, explosive bells, hard bodywork."},
+			{"Kettlebell", "Simple & Sinister."},
+			{"Barbell", "Building to a new 3RM."},
+			{"Body weight", "Increasing volume and/or skill in the movements."},
 		},
 	},
 	{
 		Num: 4, Weeks: "Week 8", Label: "Finish", Name: "Test week",
 		Tagline: "Retest your week-one numbers and see the progress.",
 		Detail: []Block{
-			{"Movement", "Re-test the week-one benchmarks across all three days."},
-			{"Intent", "See the proof in the numbers, then plan what's next."},
-			{"The three days", "One last honest measure of barbell, bell and body."},
+			{"Kettlebell", "Timed Simple."},
+			{"Barbell", "3-rep-max retest - deadlift, Zercher squat and military press."},
+			{"Body weight", "Retest the movements - push-up, pull-up and squat or split squat."},
 		},
 	},
 }
