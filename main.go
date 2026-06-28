@@ -1,4 +1,4 @@
-// The Beast Inside — single-binary, server-rendered site (Go + html/template + htmx).
+// The Beast Inside - single-binary, server-rendered site (Go + html/template + htmx).
 //
 //	go run .      # then open http://localhost:8080
 package main
@@ -48,14 +48,19 @@ type Day struct {
 	Soon    string
 }
 
-// days holds the three sessions. Day One is programmed; Two and Three are
-// stubbed until the weekly plan lands.
+// days holds the three sessions in order: Kettlebell, Barbell, Body Work.
+// Day Two (barbell) is programmed; One and Three are stubbed until the plan lands.
 var days = map[int]Day{
 	1: {
-		Num: 1, Name: "Day One", Tool: "Barbells", Title: "Barbells",
-		Tagline: "Big barbell lifts — squat, press and deadlift — done heavy and simple.",
+		Num: 1, Name: "Day One", Tool: "Kettlebell", Title: "Kettlebell",
+		Tagline: "Kettlebell work - swings, cleans, presses and carries for power and conditioning.",
+		Soon:    "Full session details coming soon.",
+	},
+	2: {
+		Num: 2, Name: "Day Two", Tool: "Barbell", Title: "Barbell",
+		Tagline: "Big barbell lifts - squat, press and deadlift - done heavy and simple.",
 		Blocks: []Block{
-			{"Prime", "8 min — hips, spine, shoulders. Empty bar, then build."},
+			{"Prime", "8 min - hips, spine, shoulders. Empty bar, then build."},
 			{"Main lift", "Back Squat · 5×5 · leave one rep in the tank"},
 			{"Press", "Overhead Press · 5×3 · strict, no leg drive"},
 			{"Pull", "Barbell Row or Deadlift · 4×6"},
@@ -63,14 +68,9 @@ var days = map[int]Day{
 		},
 		Note: "Sets, reps and loads are set in your session.",
 	},
-	2: {
-		Num: 2, Name: "Day Two", Tool: "Kettlebells", Title: "Kettlebells",
-		Tagline: "Kettlebell work — swings, cleans, presses and carries for power and conditioning.",
-		Soon:    "Full session details coming soon.",
-	},
 	3: {
 		Num: 3, Name: "Day Three", Tool: "Body Work", Title: "Body Work",
-		Tagline: "Bodyweight training — push, pull, hinge and core. Train anywhere.",
+		Tagline: "Bodyweight training - push, pull, hinge and core. Train anywhere.",
 		Soon:    "Full session details coming soon.",
 	},
 }
@@ -109,7 +109,7 @@ var phases = []Phase{
 		Num: 1, Weeks: "Week 1", Label: "Phase One", Name: "Foundation",
 		Tagline: "Learn the lifts and set your starting numbers.",
 		Detail: []Block{
-			{"Movement", "Grease the patterns — squat, hinge, press, carry — at honest, easy loads."},
+			{"Movement", "Grease the patterns - squat, hinge, press, carry - at honest, easy loads."},
 			{"Intent", "No ego. We baseline every lift so we know exactly what we're working with."},
 			{"The three days", "Barbell, bell and body, all introduced light. Form is the only metric."},
 		},
@@ -120,16 +120,16 @@ var phases = []Phase{
 		Detail: []Block{
 			{"Movement", "Same lifts, real weight. Sets and reps step up across all three days."},
 			{"Intent", "Build work capacity and confidence under load before the long block."},
-			{"The three days", "Barbell strength, kettlebell power, bodyweight control — dialled in."},
+			{"The three days", "Barbell strength, kettlebell power, bodyweight control - dialled in."},
 		},
 	},
 	{
 		Num: 3, Weeks: "Weeks 3-7", Label: "Phase Three", Name: "Overload",
-		Tagline: "The main block — a little more each week.",
+		Tagline: "The main block - a little more each week.",
 		Detail: []Block{
 			{"Movement", "Five weeks of steady climb: more load, tighter execution, earned every session."},
 			{"Intent", "Adapt and overload. The week repeats so the work compounds."},
-			{"The three days", "Each day pushes its own edge — heavy iron, explosive bells, hard bodywork."},
+			{"The three days", "Each day pushes its own edge - heavy iron, explosive bells, hard bodywork."},
 		},
 	},
 	{
@@ -145,7 +145,7 @@ var phases = []Phase{
 
 func main() {
 	// `go run . build` (or the built binary with `build`) renders the site to
-	// ./dist as plain static files — no server needed to host it.
+	// ./dist as plain static files - no server needed to host it.
 	if len(os.Args) > 1 && os.Args[1] == "build" {
 		if err := buildStatic(); err != nil {
 			log.Fatalf("build: %v", err)
@@ -181,7 +181,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("The Beast Inside — listening on http://localhost%s", addr)
+		log.Printf("The Beast Inside - listening on http://localhost%s", addr)
 		if err := srv.Serve(ln); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("serve: %v", err)
 		}
@@ -257,7 +257,7 @@ func phase(w http.ResponseWriter, r *http.Request) {
 }
 
 // enquire handles the "get in touch" form. Placeholder: it validates lightly
-// and returns a confirmation. TODO: persist the enquiry / email Sam — the other
+// and returns a confirmation. TODO: persist the enquiry / email Sam - the other
 // fields (phone, age, experience, goal, availability[], commitment checkboxes)
 // are accepted but not yet stored. availability is multi-value: r.Form["availability"].
 func enquire(w http.ResponseWriter, r *http.Request) {
@@ -301,7 +301,7 @@ func noCache(h http.Handler) http.Handler {
 }
 
 // buildStatic renders index.html and copies the embedded static assets into
-// ./dist — a self-contained static site you can host anywhere (GitHub Pages,
+// ./dist - a self-contained static site you can host anywhere (GitHub Pages,
 // Cloudflare Pages, Netlify, …). The page is fully client-side now: the phase
 // panels toggle in JS and the enquiry form posts to Web3Forms.
 func buildStatic() error {
