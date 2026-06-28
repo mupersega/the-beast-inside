@@ -473,26 +473,31 @@ img { max-width: 100%; display: block; }
 .cta .band-lede { margin-left: auto; margin-right: auto; }
 
 /* scarcity: 8 spot pips (remaining glow tan, taken are empty) */
-.spots { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; margin-top: 3.6rem; }
-.spots-pipwrap { position: relative; }
-.spots-pips { display: inline-flex; gap: 0.5rem; }
-.pip { width: 0.95rem; height: 0.95rem; border-radius: 2px; }
-.pip.taken { background: #34383b; }                       /* spot already taken */
-.pip.open  { background: var(--accent); box-shadow: 0 0 10px rgba(203, 168, 103, 0.55); }  /* still open */
+.spots { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-top: 3.9rem; }
+.spots-pipwrap { position: relative; --pip: 0.95rem; --pgap: 0.5rem; }
+.spots-pips { display: inline-flex; gap: var(--pgap); }
+.pip { width: var(--pip); height: var(--pip); border-radius: 2px; }
+.pip.taken { background: var(--accent); }                 /* spot taken (filled, accent) */
+.pip.open  { background: #34383b; }                       /* still open (grey) */
 
-/* hand-written "this could be yours" callout, with a curved arrow to an open spot */
-.spots-callout {
-  position: absolute; left: 50%; bottom: calc(100% + 0.05rem);
-  transform: translateX(-30%);
-  display: flex; align-items: flex-end; gap: 0.05rem; pointer-events: none;
+/* hand-written "this one could be yours" callout. The arrow TIP is anchored over
+   the 6th pip (the first open one): its centre is a fixed 5*(pip+gap)+pip/2 from
+   the left, so the arrow always lands on an open spot, any screen size.
+   (tip is at viewBox x=46 of 56 in a 3rem-wide svg -> 2.46rem from the svg left) */
+.spots-callout-arrow {
+  position: absolute; bottom: calc(100% + 0.18rem);
+  left: calc(5 * (var(--pip) + var(--pgap)) + var(--pip) / 2 - 2.46rem);
+  width: 3rem; height: 2.57rem; overflow: visible; pointer-events: none;
 }
-.spots-callout-text {
-  font-family: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Comic Sans MS", cursive;
-  font-size: 1.18rem; line-height: 1.05; color: var(--accent-2);
-  white-space: nowrap; transform: rotate(-5deg); margin-bottom: 0.55rem;
-}
-.spots-callout-arrow { width: 3rem; height: 2.7rem; overflow: visible; flex: none; }
 .spots-callout-arrow path { fill: none; stroke: var(--accent-2); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.spots-callout-text {
+  position: absolute; bottom: calc(100% + 2.35rem);
+  right: calc(8 * var(--pip) + 7 * var(--pgap) - 5.4rem);
+  font-family: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Comic Sans MS", cursive;
+  font-size: 1.18rem; line-height: 1; color: var(--accent-2);
+  white-space: nowrap; transform: rotate(-4deg); transform-origin: right bottom;
+  pointer-events: none;
+}
 
 .spots-line {
   font-family: var(--head); font-weight: 500; font-size: 0.8rem;

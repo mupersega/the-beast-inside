@@ -292,13 +292,13 @@
               <span class="pip open"></span>
               <span class="pip open"></span>
             </span>
-            <span class="spots-callout" aria-hidden="true">
-              <span class="spots-callout-text">this one could be yours</span>
-              <svg class="spots-callout-arrow" viewBox="0 0 60 54" fill="none">
-                <path class="ca-stem" d="M3 6 C 30 0, 54 13, 50 42"/>
-                <path class="ca-head" d="M41 34 L 51 45 L 59 32"/>
-              </svg>
-            </span>
+            <!-- text + arrow are positioned independently so the arrow tip can be
+                 anchored exactly over an open spot (see app.css). -->
+            <span class="spots-callout-text" aria-hidden="true">this one could be yours</span>
+            <svg class="spots-callout-arrow" viewBox="0 0 56 48" fill="none" aria-hidden="true">
+              <path class="ca-stem" d="M5 4 C 30 0, 53 12, 46 38"/>
+              <path class="ca-head" d="M37 31 L 46 42 L 55 30"/>
+            </svg>
           </div>
           <span class="spots-line">Only {{.SpotsTotal}} spots each intake</span>
         </div>
