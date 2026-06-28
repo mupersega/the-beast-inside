@@ -46,6 +46,10 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+/* kill the mobile browser's blue/grey tap-highlight flash on tappable elements
+   (header, buttons, links). Inherited, so html covers everything; our own
+   :active / :hover states still give branded feedback. */
+html { -webkit-tap-highlight-color: transparent; }
 
 /* Text selection: dark chip + white text everywhere, so highlighting never
    flashes the browser's default blue/white. */
