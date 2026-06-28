@@ -344,14 +344,14 @@
               <span class="avail-col">Evening</span>
 
               <span class="avail-row">Weekdays</span>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekdays · Morning" aria-label="Weekday mornings"><span class="avail-face" aria-hidden="true"></span></label>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekdays · Midday" aria-label="Weekday middays"><span class="avail-face" aria-hidden="true"></span></label>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekdays · Evening" aria-label="Weekday evenings"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekday_morning" aria-label="Weekday mornings"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekday_midday" aria-label="Weekday middays"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekday_evening" aria-label="Weekday evenings"><span class="avail-face" aria-hidden="true"></span></label>
 
               <span class="avail-row">Weekends</span>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekends · Morning" aria-label="Weekend mornings"><span class="avail-face" aria-hidden="true"></span></label>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekends · Midday" aria-label="Weekend middays"><span class="avail-face" aria-hidden="true"></span></label>
-              <label class="avail-cell"><input type="checkbox" name="availability" value="Weekends · Evening" aria-label="Weekend evenings"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekend_morning" aria-label="Weekend mornings"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekend_midday" aria-label="Weekend middays"><span class="avail-face" aria-hidden="true"></span></label>
+              <label class="avail-cell"><input type="checkbox" data-slot="weekend_evening" aria-label="Weekend evenings"><span class="avail-face" aria-hidden="true"></span></label>
             </div>
           </fieldset>
 
@@ -443,7 +443,33 @@
         var btn = form.querySelector('button[type="submit"]');
         var first = esc(((form.elements['name'].value || 'mate').trim().split(/\s+/)[0]) || 'mate');
         if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
-        fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) })
+
+        // Normalise the availability grid into stable, parseable fields: one
+        // yes/no per slot (the same six keys on EVERY submission, so they tabulate
+        // cleanly across applicants), a count, and a readable summary for the email.
+        var fd = new FormData(form);
+        var SLOTS = [
+          { slot: 'weekday_morning', group: 'Weekdays', time: 'morning' },
+          { slot: 'weekday_midday',  group: 'Weekdays', time: 'midday'  },
+          { slot: 'weekday_evening', group: 'Weekdays', time: 'evening' },
+          { slot: 'weekend_morning', group: 'Weekends', time: 'morning' },
+          { slot: 'weekend_midday',  group: 'Weekends', time: 'midday'  },
+          { slot: 'weekend_evening', group: 'Weekends', time: 'evening' }
+        ];
+        var wd = [], we = [], n = 0;
+        SLOTS.forEach(function (a) {
+          var box = form.querySelector('[data-slot="' + a.slot + '"]');
+          var on = !!(box && box.checked);
+          fd.set('avail_' + a.slot, on ? 'yes' : 'no');
+          if (on) { n++; (a.group === 'Weekdays' ? wd : we).push(a.time); }
+        });
+        var parts = [];
+        if (wd.length) parts.push('Weekdays: ' + wd.join(', '));
+        if (we.length) parts.push('Weekends: ' + we.join(', '));
+        fd.set('availability', parts.length ? parts.join(' | ') : 'None selected');
+        fd.set('availability_count', String(n));
+
+        fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd })
           .then(function (r) { return r.json(); })
           .then(function (data) {
             if (!data || !data.success) throw new Error('failed');
