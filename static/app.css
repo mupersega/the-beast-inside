@@ -12,6 +12,13 @@
   src: url('fonts/oswald-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+/* Self-hosted Caveat (variable weight, OFL) - the handwritten "writing" font.
+   Self-hosted so it renders identically on every device (a bare system-font
+   stack fell back to a different cursive per OS). Latin subset only. */
+@font-face {
+  font-family: 'Caveat'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('fonts/caveat-latin.woff2') format('woff2');
+}
 
 :root {
   --bg:       #141516;   /* page (near black)          */
@@ -34,7 +41,7 @@
 
   --head: "Oswald", "Arial Narrow", sans-serif;
   --body: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --script: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Comic Sans MS", cursive;
+  --script: "Caveat", "Segoe Script", "Snell Roundhand", cursive;
 }
 
 * { box-sizing: border-box; }
@@ -75,7 +82,7 @@ img { max-width: 100%; display: block; }
 .topbar {
   position: sticky; top: 0; z-index: 50;   /* stays pinned to the top on scroll */
   overflow: hidden; cursor: pointer;        /* click anywhere (but the Apply chip) -> back to top */
-  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   padding: clamp(0.9rem, 2.4vmin, 1.5rem) clamp(1.25rem, 4vmin, 2.75rem);
   background: var(--bg);
   border-bottom: 3px solid var(--accent);
@@ -99,8 +106,8 @@ img { max-width: 100%; display: block; }
 /* "never left" appended to the wordmark in the handwritten script font, so the
    bar reads "THE BEAST INSIDE never left". em-sized to track the brand. */
 .topbar-addendum {
-  font-family: var(--script); font-weight: 500; text-transform: uppercase;
-  font-size: 0.6em; letter-spacing: 0.01em; color: var(--accent-2);
+  font-family: var(--script); font-weight: 600; text-transform: uppercase;
+  font-size: 0.66em; letter-spacing: 0.01em; color: var(--accent-2);
   margin-left: 0.45em; white-space: nowrap;
 }
 /* right-side Apply chip: a dark pill that colour-blends with the fog. A multiply
@@ -113,15 +120,14 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.16em; font-size: clamp(0.72rem, 1.7vmin, 0.92rem);
   color: var(--white); text-decoration: none; white-space: nowrap;
   padding: 0.55rem 1.3rem; border-radius: 4px;   /* match the hero "Apply for a spot" button */
-  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-  transition: color .2s ease, border-color .2s ease, transform .12s ease;
+  transition: color .2s ease, transform .12s ease;
 }
 .topbar-apply::before {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
   background: rgba(8, 9, 10, 0.55); mix-blend-mode: multiply; pointer-events: none;
 }
 .topbar-apply:hover, .topbar-apply:focus-visible {
-  color: var(--accent-2); border-color: var(--accent); outline: none;
+  color: var(--accent-2); outline: none;
 }
 .topbar-apply:hover::before { background: rgba(8, 9, 10, 0.78); }
 .topbar-apply:active { transform: translateY(1px); }
@@ -556,8 +562,9 @@ img { max-width: 100%; display: block; }
 .spots-callout-text {
   position: absolute; bottom: calc(100% + 1.75rem);
   right: calc(8 * var(--pip) + 7 * var(--pgap) - 5.4rem);
-  font-family: var(--script);
-  font-size: 1.18rem; line-height: 1; color: var(--accent-2);
+  padding-right: 0.6rem;   /* a little breathing room on the right before the arrow */
+  font-family: var(--script); font-weight: 600;
+  font-size: 1.32rem; line-height: 1; color: var(--accent-2);
   white-space: nowrap; transform: rotate(-4deg); transform-origin: right bottom;
   pointer-events: none;
 }
@@ -743,4 +750,7 @@ html { scroll-behavior: smooth; }
   .blocks li, .spec { grid-template-columns: 1fr; gap: 0.25rem; }
   .strap { justify-content: center; }
   .field-grid { grid-template-columns: 1fr; }
+  /* small phones: drop the "never left" flourish so the wordmark + Apply chip
+     have room and the header stays clean. */
+  .topbar-addendum { display: none; }
 }
