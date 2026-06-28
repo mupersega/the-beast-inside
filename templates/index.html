@@ -112,7 +112,7 @@
       <div class="band-head">
         <p class="band-eyebrow">The program</p>
         <h2 class="band-title">How the 8 weeks work</h2>
-        <p class="band-lede">Same three days every week - barbell, bell, bodyweight. The load climbs week on week, so you finish stronger than you started. No guesswork - Sam programs every session.</p>
+        <p class="band-lede">Same three days every week - bell, barbell, bodyweight. The load climbs week on week, so you finish stronger than you started. No guesswork - Sam programs every session.</p>
       </div>
 
       <ol class="phases">
@@ -321,7 +321,8 @@
             <label class="field"><span>Phone</span>
               <input type="tel" name="phone" autocomplete="tel"></label>
             <label class="field"><span>Age</span>
-              <input type="number" name="age" min="18" max="70" inputmode="numeric"></label>
+              <input type="number" name="age" min="40" max="50" inputmode="numeric"
+                     title="This program is for men aged 40 to 50."></label>
             <label class="field full"><span>Where are you at?</span>
               <select name="experience">
                 <option value="" selected disabled>Choose one&hellip;</option>
@@ -425,6 +426,18 @@
       var form = document.getElementById('lead-form');
       if (!form) return;
       function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      // Friendly message when the age is outside 40-50 (the native min/max still
+      // blocks the submit; this just makes the validation bubble read nicely).
+      var age = form.elements['age'];
+      if (age) {
+        var ageMsg = function () {
+          age.setCustomValidity(
+            (age.validity.rangeUnderflow || age.validity.rangeOverflow)
+              ? 'This program is for men aged 40 to 50.' : '');
+        };
+        age.addEventListener('input', ageMsg);
+        age.addEventListener('invalid', ageMsg);
+      }
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var btn = form.querySelector('button[type="submit"]');
@@ -530,7 +543,14 @@
 
       var vsSrc = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
       var fsSrc = [
+        // highp where the GPU supports it (mediump overflows the hash constant
+        // on real mobile GPUs, which collapsed the fog to nothing); mediump
+        // fallback only on ancient devices without fragment highp.
+        '#ifdef GL_FRAGMENT_PRECISION_HIGH',
+        'precision highp float;',
+        '#else',
         'precision mediump float;',
+        '#endif',
         'uniform vec2 u_res;',
         'uniform float u_time;',
         'float hash(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453123); }',

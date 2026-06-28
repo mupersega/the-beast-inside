@@ -119,7 +119,7 @@ img { max-width: 100%; display: block; }
    through it) while the label stays in normal compositing - white, then accent
    on hover - so the CTA reads cleanly over the moving header. */
 .topbar-apply {
-  align-self: center;
+  align-self: center; overflow: hidden;   /* clip the sheen sweep to the chip */
   font-family: var(--head); font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.16em; font-size: clamp(0.72rem, 1.7vmin, 0.92rem);
   color: var(--white); text-decoration: none; white-space: nowrap;
@@ -135,6 +135,20 @@ img { max-width: 100%; display: block; }
 }
 .topbar-apply:hover::before { background: rgba(8, 9, 10, 0.78); }
 .topbar-apply:active { transform: translateY(1px); }
+/* an occasional sheen sweeps across the chip - a little life in the header,
+   especially on mobile where the WebGL fog is lighter. Subtle + infrequent;
+   the global reduced-motion rule disables it (band rests off-screen). */
+.topbar-apply::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 35%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.40), transparent);
+  pointer-events: none;
+  animation: chip-sheen 8s ease-in-out infinite;
+}
+@keyframes chip-sheen {
+  0%   { left: -40%; }
+  14%  { left: 135%; }
+  100% { left: 135%; }
+}
 
 .strap {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
