@@ -34,10 +34,16 @@
 
   --head: "Oswald", "Arial Narrow", sans-serif;
   --body: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --script: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Comic Sans MS", cursive;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+
+/* Text selection: dark chip + white text everywhere, so highlighting never
+   flashes the browser's default blue/white. */
+::selection      { background: #33373a; color: #ffffff; }
+::-moz-selection { background: #33373a; color: #ffffff; }
 
 /* skip-to-content link — off-screen until keyboard focus */
 .skip-link {
@@ -67,7 +73,8 @@ img { max-width: 100%; display: block; }
    THICK HEADER BAR + STRAPLINE (flush top)
    =========================================================================== */
 .topbar {
-  position: relative; overflow: hidden;
+  position: sticky; top: 0; z-index: 50;   /* stays pinned to the top on scroll */
+  overflow: hidden; cursor: pointer;        /* click anywhere (but the Apply chip) -> back to top */
   display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
   padding: clamp(0.9rem, 2.4vmin, 1.5rem) clamp(1.25rem, 4vmin, 2.75rem);
   background: var(--bg);
@@ -81,28 +88,43 @@ img { max-width: 100%; display: block; }
   /* fallback shown if WebGL is unavailable */
   background: linear-gradient(90deg, transparent, rgba(203, 168, 103, 0.32));
 }
-.topbar-brand, .topbar-tag { position: relative; z-index: 1; }
-/* genuinely dark text with a thin crisp light outline so it reads over the fog */
-.topbar-tag {
-  color: #140e07;
-  text-shadow:
-    -1px -1px 0 rgba(248, 242, 228, 0.95),
-     1px -1px 0 rgba(248, 242, 228, 0.95),
-    -1px  1px 0 rgba(248, 242, 228, 0.95),
-     1px  1px 0 rgba(248, 242, 228, 0.95),
-     0    1px 1px rgba(248, 242, 228, 0.95);
-}
+.topbar-brand, .topbar-apply { position: relative; z-index: 1; }
 .topbar-brand {
   margin: 0;
   font-family: var(--head); font-weight: 700; text-transform: uppercase;
   font-size: clamp(1.5rem, 4.2vmin, 2.9rem); letter-spacing: 0.03em; line-height: 1;
-  color: var(--text);
+  color: var(--text); text-decoration: none; cursor: pointer;
 }
-.topbar-tag {
-  font-family: var(--head); font-weight: 500; font-style: italic; text-transform: uppercase;
-  font-size: clamp(0.95rem, 2.4vmin, 1.5rem); letter-spacing: 0.1em;
-  white-space: nowrap;   /* colour stays the dark #140e07 set above (don't override) */
+.topbar-brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+/* "never left" appended to the wordmark in the handwritten script font, so the
+   bar reads "THE BEAST INSIDE never left". em-sized to track the brand. */
+.topbar-addendum {
+  font-family: var(--script); font-weight: 500; text-transform: uppercase;
+  font-size: 0.6em; letter-spacing: 0.01em; color: var(--accent-2);
+  margin-left: 0.45em; white-space: nowrap;
 }
+/* right-side Apply chip: a dark pill that colour-blends with the fog. A multiply
+   ::before darkens the drifting fog beneath the chip (so the fog still moves
+   through it) while the label stays in normal compositing - white, then accent
+   on hover - so the CTA reads cleanly over the moving header. */
+.topbar-apply {
+  align-self: center;
+  font-family: var(--head); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.16em; font-size: clamp(0.72rem, 1.7vmin, 0.92rem);
+  color: var(--white); text-decoration: none; white-space: nowrap;
+  padding: 0.55rem 1.3rem; border-radius: 4px;   /* match the hero "Apply for a spot" button */
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  transition: color .2s ease, border-color .2s ease, transform .12s ease;
+}
+.topbar-apply::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: rgba(8, 9, 10, 0.55); mix-blend-mode: multiply; pointer-events: none;
+}
+.topbar-apply:hover, .topbar-apply:focus-visible {
+  color: var(--accent-2); border-color: var(--accent); outline: none;
+}
+.topbar-apply:hover::before { background: rgba(8, 9, 10, 0.78); }
+.topbar-apply:active { transform: translateY(1px); }
 
 .strap {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
@@ -197,7 +219,9 @@ img { max-width: 100%; display: block; }
 .day-shape { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; overflow: visible; pointer-events: none; }
 .day-shape .shp {
   fill: rgba(13, 14, 15, 0.55);
-  stroke: rgba(203, 168, 103, 0.85);
+  /* closed = a faint, translucent accent ring; on open it firms up to the solid
+     accent (see the open rule below). */
+  stroke: rgba(203, 168, 103, 0.38);
   stroke-width: 1.6; vector-effect: non-scaling-stroke; stroke-linejoin: round;
   fill-rule: evenodd;   /* lets the kettlebell's grip hole punch through on open */
   /* Closed = a pristine circle, identical for all three, so the resting Venn /
@@ -210,9 +234,29 @@ img { max-width: 100%; display: block; }
   transition: d .42s cubic-bezier(.2,.7,.2,1), fill .3s ease, stroke .3s ease;
 }
 
-/* closed centres (mild Venn overlap) */
-.c-tl { --cx: 33%; --cy: 33%; }
-.c-tr { --cx: 67%; --cy: 33%; }
+/* Faint blurred backing behind the open circle's text. The day name / tool /
+   tagline sit over the busy morphing silhouette and the overlapping circle
+   outlines, which made them hard to read - this calms the detail directly
+   behind the words. Only shown when the circle is open; radial-masked so there
+   is no hard disc edge. Sits above the shape (z 0) but below the text (z 1). */
+.circle::before {
+  content: ""; position: absolute; inset: 14%;
+  z-index: 0; border-radius: 50%;
+  background: rgba(13, 14, 15, 0.32);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+          mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+  opacity: 0; transition: opacity .4s ease; pointer-events: none;
+}
+.circle:hover::before, .circle:focus::before, .circle:focus-within::before, .circle.is-open::before {
+  opacity: 1;
+}
+
+/* closed centres (mild Venn overlap). --tx nudges the top-row labels outward,
+   away from the centre overlap, so the closed text doesn't read as colliding
+   with the neighbouring circle (reset to 0 when the circle opens). */
+.c-tl { --cx: 33%; --cy: 33%; --tx: -1.6rem; }
+.c-tr { --cx: 67%; --cy: 33%; --tx:  1.6rem; }
 .c-b  { --cx: 50%; --cy: 66%; }
 
 /* open: the same boulder grows + lifts. The box width/height transition pushes
@@ -235,10 +279,15 @@ img { max-width: 100%; display: block; }
 .c-b:hover  .shp, .c-b:focus  .shp, .c-b:focus-within  .shp, .c-b.is-open  .shp { d: path("M46.00,8.13 L47.94,10.57 L49.89,13.01 L51.83,15.46 L53.78,17.90 L55.72,20.35 L57.92,18.71 L60.21,16.41 L62.33,14.04 L64.46,11.67 L66.75,9.37 L67.13,11.97 L67.38,15.12 L67.63,18.27 L67.63,21.52 L67.88,24.66 L66.91,26.72 L68.43,29.31 L69.49,32.12 L69.88,35.21 L69.88,38.25 L69.13,41.19 L67.75,43.87 L65.81,46.32 L63.44,48.44 L60.77,49.85 L59.11,52.27 L56.91,54.46 L54.35,56.13 L51.41,56.88 L48.37,56.88 L45.45,56.67 L42.80,58.13 L39.76,58.63 L36.65,58.97 L33.57,59.38 L30.53,59.88 L27.42,60.21 L24.34,60.63 L21.36,60.48 L19.06,58.18 L16.99,55.89 L20.02,55.36 L22.97,54.63 L24.39,51.99 L25.80,49.32 L27.22,51.59 L29.19,53.13 L32.23,52.63 L34.47,50.90 L35.89,48.24 L37.30,50.67 L39.91,50.88 L39.13,48.19 L39.13,45.14 L38.17,43.13 L34.92,43.13 L32.89,44.99 L31.63,47.72 L30.38,47.30 L29.38,44.47 L26.75,43.63 L24.65,43.88 L25.13,45.66 L23.77,48.35 L22.54,48.66 L21.63,45.79 L19.78,43.88 L17.03,42.66 L14.31,42.88 L11.70,41.83 L11.13,39.03 L13.43,37.13 L15.86,36.51 L17.88,34.10 L20.56,32.88 L23.35,31.77 L26.13,30.63 L28.90,29.47 L31.90,28.88 L35.05,28.63 L38.20,28.38 L41.44,28.38 L43.55,26.32 L45.85,24.03 L44.13,23.60 L44.38,20.45 L44.88,17.41 L45.13,14.26 L45.63,11.22 Z M52.00,28.80 L53.09,29.01 L54.05,29.56 L54.76,30.41 L55.13,31.45 L55.15,32.55 L54.76,33.59 L54.05,34.44 L53.09,35.00 L52.00,35.18 L50.91,35.00 L49.95,34.44 L49.24,33.59 L48.85,32.55 L48.87,31.45 L49.24,30.41 L49.95,29.56 L50.91,29.01 Z"); }
 */
 .c-b:hover  .shp, .c-b:focus  .shp, .c-b:focus-within  .shp, .c-b.is-open  .shp { d: path("M58.92,16.50 L61.48,17.31 L63.34,19.08 L64.29,21.43 L63.87,24.09 L62.31,26.14 L60.31,27.94 L61.33,30.38 L63.78,30.69 L65.60,29.26 L66.77,26.84 L67.95,24.42 L69.47,22.75 L71.71,23.67 L71.42,26.35 L71.13,29.03 L70.83,31.70 L70.54,34.38 L70.20,37.03 L68.02,38.61 L65.38,38.55 L62.69,38.34 L60.01,38.12 L58.63,40.09 L57.55,42.56 L56.48,45.03 L55.40,47.50 L55.77,49.26 L58.38,49.93 L60.99,50.60 L63.60,51.27 L65.49,53.06 L66.88,55.25 L66.61,57.93 L65.64,60.43 L64.60,62.92 L63.57,65.40 L62.53,67.89 L61.50,70.38 L60.46,72.86 L58.76,74.72 L56.62,74.21 L55.86,71.88 L56.06,69.19 L56.26,66.51 L56.46,63.82 L56.66,61.13 L55.24,59.62 L52.63,58.96 L50.02,58.30 L47.61,59.40 L45.90,61.40 L44.38,63.63 L42.86,65.86 L41.20,67.96 L39.38,69.95 L37.56,71.94 L35.74,73.92 L33.92,75.91 L32.10,77.90 L29.86,79.03 L27.91,77.53 L28.59,75.04 L29.51,72.51 L30.44,69.98 L31.36,67.45 L32.29,64.92 L33.21,62.39 L34.63,60.12 L36.19,57.93 L37.75,55.73 L38.24,53.11 L39.12,50.62 L40.49,48.30 L41.85,45.97 L41.40,43.81 L39.65,41.77 L38.50,39.53 L38.88,36.93 L41.23,35.61 L43.58,34.30 L45.93,32.98 L48.09,31.47 L49.46,29.15 L50.95,26.98 L53.46,26.00 L54.51,24.22 L54.01,21.57 L54.51,19.15 L56.38,17.36 Z M50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 L50.00,50.00 Z"); }
-.c-tl:hover, .c-tl:focus, .c-tl:focus-within, .c-tl.is-open { --cx: 31%; --cy: 31%; }
-.c-tr:hover, .c-tr:focus, .c-tr:focus-within, .c-tr.is-open { --cx: 69%; --cy: 31%; }
+.c-tl:hover, .c-tl:focus, .c-tl:focus-within, .c-tl.is-open { --cx: 31%; --cy: 31%; --tx: 0rem; }
+.c-tr:hover, .c-tr:focus, .c-tr:focus-within, .c-tr.is-open { --cx: 69%; --cy: 31%; --tx: 0rem; }
 .c-b:hover,  .c-b:focus,  .c-b:focus-within,  .c-b.is-open  { --cx: 50%; --cy: 69%; }
 
+/* text rides above the blurred backing (z 1 > the ::before's z 0) */
+.c-day, .c-tool, .c-info { position: relative; z-index: 1; }
+/* closed top-row labels shift out by --tx (set per-circle above); animates back
+   to centre as the circle opens. */
+.c-day, .c-tool { transform: translateX(var(--tx, 0rem)); transition: transform .42s cubic-bezier(.2,.7,.2,1); }
 .c-day {
   font-family: var(--head); font-weight: 600; font-size: clamp(0.6rem, 1.5vmin, 0.72rem);
   letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent);
@@ -443,7 +492,15 @@ img { max-width: 100%; display: block; }
 .faq-mark::before { top: 50%; left: 0; width: 100%; height: 2px; transform: translateY(-50%); }
 .faq-mark::after { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
 .faq-item[open] .faq-mark::after { transform: translateX(-50%) scaleY(0); opacity: 0; }
-.faq-a { padding: 0 0.25rem 1.25rem; }
+.faq-a {
+  padding: 0 0.25rem 1.25rem;
+  opacity: 1; transform: translateY(0);
+  transition: opacity .35s ease, transform .35s ease;
+}
+/* fade + ease the answer in when the panel opens (it still pops, the text eases) */
+.faq-item[open] .faq-a {
+  @starting-style { opacity: 0; transform: translateY(-0.45rem); }
+}
 .faq-a p { margin: 0; max-width: 60ch; color: var(--muted); line-height: 1.6; }
 
 /* what you get */
@@ -473,12 +530,18 @@ img { max-width: 100%; display: block; }
 .cta .band-lede { margin-left: auto; margin-right: auto; }
 
 /* scarcity: 8 spot pips (remaining glow tan, taken are empty) */
-.spots { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-top: 3.9rem; }
+.spots { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-top: 3rem; }
 .spots-pipwrap { position: relative; --pip: 0.95rem; --pgap: 0.5rem; }
 .spots-pips { display: inline-flex; gap: var(--pgap); }
 .pip { width: var(--pip); height: var(--pip); border-radius: 2px; }
 .pip.taken { background: var(--accent); }                 /* spot taken (filled, accent) */
 .pip.open  { background: #34383b; }                       /* still open (grey) */
+/* the spot the callout points at: a subtle accent-border pulse */
+.pip.next  { animation: pip-pulse 1.9s ease-in-out infinite; }
+@keyframes pip-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(203, 168, 103, 0); }
+  50%      { box-shadow: 0 0 0 3px rgba(203, 168, 103, 0.5); }
+}
 
 /* hand-written "this one could be yours" callout. The arrow TIP is anchored over
    the 6th pip (the first open one): its centre is a fixed 5*(pip+gap)+pip/2 from
@@ -491,9 +554,9 @@ img { max-width: 100%; display: block; }
 }
 .spots-callout-arrow path { fill: none; stroke: var(--accent-2); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .spots-callout-text {
-  position: absolute; bottom: calc(100% + 2.35rem);
+  position: absolute; bottom: calc(100% + 1.75rem);
   right: calc(8 * var(--pip) + 7 * var(--pgap) - 5.4rem);
-  font-family: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Comic Sans MS", cursive;
+  font-family: var(--script);
   font-size: 1.18rem; line-height: 1; color: var(--accent-2);
   white-space: nowrap; transform: rotate(-4deg); transform-origin: right bottom;
   pointer-events: none;
@@ -655,6 +718,11 @@ img { max-width: 100%; display: block; }
    reduced motion / responsive
    =========================================================================== */
 html { scroll-behavior: smooth; }
+
+/* Sticky-header offset: in-page anchor jumps (#start, #weeks, #trainer) stop
+   BELOW the pinned header instead of tucking the section's top edge under it -
+   so the target's own top padding reads as breathing room, not congestion. */
+.band, #main { scroll-margin-top: 6rem; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

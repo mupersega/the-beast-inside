@@ -56,8 +56,8 @@
   <!-- thick header bar, flush to the top -->
   <header class="topbar">
     <canvas class="header-shader" aria-hidden="true"></canvas>
-    <p class="topbar-brand">The Beast Inside</p>
-    <span class="topbar-tag">never left</span>
+    <a class="topbar-brand" href="#top">The Beast Inside <span class="topbar-addendum">never left</span></a>
+    <a class="topbar-apply" href="#start">Apply</a>
   </header>
 
   <main id="main" tabindex="-1">
@@ -288,7 +288,7 @@
               <span class="pip taken"></span>
               <span class="pip taken"></span>
               <span class="pip taken"></span>
-              <span class="pip open"></span>
+              <span class="pip open next"></span>
               <span class="pip open"></span>
               <span class="pip open"></span>
             </span>
@@ -400,6 +400,20 @@
         });
       });
       panel.addEventListener('click', function (e) { if (e.target.closest('[data-phase-close]')) reset(); });
+    })();
+  </script>
+  <script>
+    // Click the sticky header (anywhere but a link / the Apply chip) to glide
+    // back to the top. The wordmark is itself a link to #top, so keyboard and
+    // screen-reader users get the same affordance. Honours reduced-motion.
+    (function () {
+      var bar = document.querySelector('.topbar');
+      if (!bar) return;
+      bar.addEventListener('click', function (e) {
+        if (e.target.closest('a, button')) return;   // let links / the Apply chip act
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      });
     })();
   </script>
   <script>
