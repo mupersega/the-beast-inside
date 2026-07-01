@@ -464,8 +464,9 @@
       }
 
       // Availability M W F meter: each letter flips grey -> accent (with a bop
-      // each time one of its day's slots is ticked on); when all three days are
-      // covered, the whole block gives a single bigger pop.
+      // each time one of its day's slots is ticked on); once all three days are
+      // covered, after the last bop settles, the letters slide together tight
+      // (clump up) to signal locked-in.
       var TIMES = ['morning', 'midday', 'evening'];
       var REQ_DAYS = ['monday', 'wednesday', 'friday'];
       function dayMet(d) {
@@ -494,17 +495,17 @@
         mwf.setAttribute('data-met', String(count));
         var all = count === REQ_DAYS.length;
         if (all && !mwfPrevAll) {
-          // just completed. Let the last letter's bop settle FIRST, then lock in:
-          // the block settles a little bigger with a white outline + a pop.
+          // just completed. Wait for the last letter's bop to settle, THEN clump
+          // the letters together tight (the CSS gap transition does the slide).
           if (mwfLockTimer) clearTimeout(mwfLockTimer);
-          var lockIn = function () {
+          if (doAnim) {
+            mwfLockTimer = setTimeout(function () { mwf.classList.add('is-complete'); }, 450);
+          } else {
             mwf.classList.add('is-complete');
-            if (doAnim) { mwf.classList.remove('lockpop'); void mwf.offsetWidth; mwf.classList.add('lockpop'); }
-          };
-          if (doAnim) { mwfLockTimer = setTimeout(lockIn, 360); } else { lockIn(); }
+          }
         } else if (!all && mwfPrevAll) {
           if (mwfLockTimer) { clearTimeout(mwfLockTimer); mwfLockTimer = null; }
-          mwf.classList.remove('is-complete', 'lockpop');
+          mwf.classList.remove('is-complete');
         }
         mwfPrevAll = all;
       }
