@@ -572,13 +572,14 @@ img { max-width: 100%; display: block; }
 
 /* get in touch */
 .cta { text-align: center; background: var(--panel); }
-.cta.band { background: var(--panel); position: relative; }
-/* corner M W F meter: each letter lights as that training day gets a time, and
-   the lit letters brighten with how many of the three are in (1 dim -> 3 glow) */
+.cta.band { background: var(--panel); }
+/* M W F meter, centred at the foot of the availability box: each letter lights
+   as that training day gets a time, and the lit letters brighten with how many
+   of the three are in (1 dim -> 3 glow). */
 .mwf {
-  position: absolute; right: clamp(1.25rem, 4vmin, 2.75rem); bottom: clamp(1rem, 3.5vmin, 2rem);
-  display: flex; gap: 0.5rem; pointer-events: none;
-  font-family: var(--head); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.08em;
+  display: flex; justify-content: center; gap: 0.6rem;
+  margin-top: 1.1rem; pointer-events: none;
+  font-family: var(--head); font-weight: 700; font-size: 1.3rem; letter-spacing: 0.12em;
 }
 .mwf span { color: var(--muted); transition: color .25s ease, text-shadow .3s ease; }
 .mwf span.is-lit { color: var(--accent); }
@@ -757,9 +758,6 @@ img { max-width: 100%; display: block; }
 }
 .avail-cell input:checked + .avail-face::after { transform: rotate(45deg) scale(1); }
 .avail-cell input:focus-visible + .avail-face { outline: 2px solid var(--accent); outline-offset: 2px; }
-.avail-row.req::after { content: " *"; color: var(--accent); }
-.avail-req-note { margin: 0.85rem 0 0; color: var(--muted); font-size: 0.8rem; }
-.avail-req-note span { color: var(--accent); font-weight: 700; }
 
 .lead-form button {
   width: 100%; margin-top: 1.6rem;

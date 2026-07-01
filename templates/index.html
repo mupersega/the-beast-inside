@@ -372,7 +372,11 @@
               <label class="avail-cell"><input type="checkbox" data-slot="friday_midday" aria-label="Friday midday"><span class="avail-face" aria-hidden="true"></span></label>
               <label class="avail-cell"><input type="checkbox" data-slot="friday_evening" aria-label="Friday evening"><span class="avail-face" aria-hidden="true"></span></label>
             </div>
-            <p class="avail-req-note">Pick at least one time you could make on each day.</p>
+            <div class="mwf" data-met="0" aria-hidden="true">
+              <span data-day="monday">M</span>
+              <span data-day="wednesday">W</span>
+              <span data-day="friday">F</span>
+            </div>
           </fieldset>
 
           <fieldset class="commitments">
@@ -390,11 +394,6 @@
 
           <button type="submit">Apply for a spot</button>
         </form>
-      </div>
-      <div class="mwf" data-met="0" aria-hidden="true">
-        <span data-day="monday">M</span>
-        <span data-day="wednesday">W</span>
-        <span data-day="friday">F</span>
       </div>
     </section>
   </main>
