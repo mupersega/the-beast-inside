@@ -463,9 +463,9 @@
         age.addEventListener('invalid', ageMsg);
       }
 
-      // Availability: each training day needs a time. As Mon/Wed/Fri get covered
-      // the corner "M W F" meter brightens (1 dim, 2 brighter, 3 brightest), and
-      // the moment all three are covered the grid gives a little "clunk".
+      // Availability M W F meter: as each of Mon/Wed/Fri gets a time, its letter
+      // flips grey -> accent with a little bop. When all three are in, the block
+      // bops bigger and inverts into a solid accent "button" with dark letters.
       var TIMES = ['morning', 'midday', 'evening'];
       var REQ_DAYS = ['monday', 'wednesday', 'friday'];
       function dayMet(d) {
@@ -474,34 +474,36 @@
           return b && b.checked;
         });
       }
-      function reqSatisfied() { return REQ_DAYS.every(dayMet); }
       var mwf = document.querySelector('.mwf');
-      function updateMwf() {
+      var mwfPrev = {};
+      REQ_DAYS.forEach(function (d) { mwfPrev[d] = false; });
+      var mwfPrevAll = false;
+      function updateMwf(animate) {
         if (!mwf) return;
         var count = 0;
         REQ_DAYS.forEach(function (d) {
-          var met = dayMet(d);
-          if (met) count++;
+          var on = dayMet(d);
+          if (on) count++;
           var letter = mwf.querySelector('[data-day="' + d + '"]');
-          if (letter) letter.classList.toggle('is-lit', met);
+          if (letter) {
+            letter.classList.toggle('is-lit', on);
+            if (animate && on && !mwfPrev[d]) {          // just turned on: little bop
+              letter.classList.remove('bop'); void letter.offsetWidth; letter.classList.add('bop');
+            }
+          }
+          mwfPrev[d] = on;
         });
         mwf.setAttribute('data-met', String(count));
+        var all = count === REQ_DAYS.length;
+        if (animate && all && !mwfPrevAll) {             // whole set just completed: big bop
+          mwf.classList.remove('bigbop'); void mwf.offsetWidth; mwf.classList.add('bigbop');
+        }
+        mwfPrevAll = all;
       }
-      var availGrid = form.querySelector('.avail-grid');
-      var availWasSatisfied = false;
       form.querySelectorAll('.avail-cell input[data-slot]').forEach(function (box) {
-        box.addEventListener('change', function () {
-          updateMwf();
-          var now = reqSatisfied();
-          if (now && !availWasSatisfied && availGrid) {
-            availGrid.classList.remove('locked-in');
-            void availGrid.offsetWidth;   // reflow so the animation restarts
-            availGrid.classList.add('locked-in');
-          }
-          availWasSatisfied = now;
-        });
+        box.addEventListener('change', function () { updateMwf(true); });
       });
-      updateMwf();
+      updateMwf(false);
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
