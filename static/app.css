@@ -581,7 +581,7 @@ img { max-width: 100%; display: block; }
   display: flex; width: fit-content; margin: 1.2rem auto 0;
   justify-content: center; gap: 0.6rem; pointer-events: none;
   font-family: var(--head); font-weight: 700; font-size: 1.35rem; letter-spacing: 0.14em;
-  transition: gap .45s cubic-bezier(.2, .8, .2, 1), letter-spacing .45s cubic-bezier(.2, .8, .2, 1);
+  transition: gap .3s cubic-bezier(.2, .8, .2, 1), letter-spacing .3s cubic-bezier(.2, .8, .2, 1);
 }
 /* three colour stages: grey (off) -> muted accent (on, still disparate) ->
    full accent (locked in, all three clumped) */
@@ -593,7 +593,7 @@ img { max-width: 100%; display: block; }
 .mwf span.bop { animation: mwf-bop .32s cubic-bezier(.3, 1.5, .5, 1); }
 /* all three covered (after the last letter's bop settles): the letters slide
    together, overshooting to touching, then landing a pixel or two apart. */
-.mwf.is-complete { gap: 0.1rem; letter-spacing: -0.005em; animation: mwf-clump .5s cubic-bezier(.3, .75, .35, 1); }
+.mwf.is-complete { gap: 0.1rem; letter-spacing: -0.005em; animation: mwf-clump .34s cubic-bezier(.3, .75, .35, 1); }
 @keyframes mwf-clump {
   0%   { gap: 0.6rem; letter-spacing: 0.14em; }
   60%  { gap: 0;      letter-spacing: -0.02em; }
