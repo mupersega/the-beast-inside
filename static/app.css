@@ -488,6 +488,7 @@ img { max-width: 100%; display: block; }
 .spec { display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; align-items: baseline; padding: 0.9rem 0; border-top: 1px solid var(--line); }
 .spec dt { font-family: var(--head); font-weight: 600; font-size: 0.76rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .spec dd { margin: 0; color: var(--text); }
+.spec-note { color: var(--muted); font-size: 0.9em; white-space: nowrap; }
 
 /* location map */
 .map-embed {
@@ -571,7 +572,19 @@ img { max-width: 100%; display: block; }
 
 /* get in touch */
 .cta { text-align: center; background: var(--panel); }
-.cta.band { background: var(--panel); }
+.cta.band { background: var(--panel); position: relative; }
+/* corner M W F meter: each letter lights as that training day gets a time, and
+   the lit letters brighten with how many of the three are in (1 dim -> 3 glow) */
+.mwf {
+  position: absolute; right: clamp(1.25rem, 4vmin, 2.75rem); bottom: clamp(1rem, 3.5vmin, 2rem);
+  display: flex; gap: 0.5rem; pointer-events: none;
+  font-family: var(--head); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.08em;
+}
+.mwf span { color: var(--muted); transition: color .25s ease, text-shadow .3s ease; }
+.mwf span.is-lit { color: var(--accent); }
+.mwf[data-met="1"] span.is-lit { color: color-mix(in srgb, var(--accent) 58%, var(--muted)); }
+.mwf[data-met="2"] span.is-lit { color: var(--accent); }
+.mwf[data-met="3"] span.is-lit { color: var(--accent-2); text-shadow: 0 0 10px rgba(203, 168, 103, 0.6); }
 .cta-inner { max-width: 44rem; margin: 0 auto; }
 .cta-title { font-family: var(--head); font-weight: 700; font-size: clamp(2.2rem, 7vmin, 3.8rem); text-transform: uppercase; line-height: 1.02; margin: 0.4rem 0 0; color: var(--text); }
 .cta .band-lede { margin-left: auto; margin-right: auto; }
@@ -702,9 +715,25 @@ img { max-width: 100%; display: block; }
   gap: 0.45rem; align-items: stretch;
 }
 .avail-col {
-  font-family: var(--head); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--muted); text-align: center; align-self: end; padding-bottom: 0.2rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+  align-self: end; padding-bottom: 0.25rem; color: var(--muted);
 }
+.avail-col-icon {
+  width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+.avail-col-text {
+  font-family: var(--head); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* the moment all three training days are covered, the grid clunks into place */
+@keyframes avail-lockin {
+  0%   { transform: scale(1);     box-shadow: 0 0 0 0 rgba(203, 168, 103, 0); }
+  30%  { transform: scale(0.978); box-shadow: 0 0 0 4px rgba(203, 168, 103, 0.28); }
+  60%  { transform: scale(1.006); }
+  100% { transform: scale(1);     box-shadow: 0 0 0 0 rgba(203, 168, 103, 0); }
+}
+.avail-grid.locked-in { animation: avail-lockin .3s cubic-bezier(.34, 1.1, .5, 1); }
 .avail-row {
   font-family: var(--head); font-weight: 600; font-size: 0.74rem; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--text); align-self: center;
@@ -797,4 +826,7 @@ html { scroll-behavior: smooth; }
   /* small phones: drop the "never left" flourish so the wordmark + Apply chip
      have room and the header stays clean. */
   .topbar-addendum { display: none; }
+  /* availability header goes icon-only to keep the four-column grid legible */
+  .avail-col-text { display: none; }
+  .avail-col-icon { width: 1.35rem; height: 1.35rem; }
 }
