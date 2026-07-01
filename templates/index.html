@@ -463,9 +463,9 @@
         age.addEventListener('invalid', ageMsg);
       }
 
-      // Availability M W F meter: as each of Mon/Wed/Fri gets a time, its letter
-      // flips grey -> accent with a little bop. When all three are in, the block
-      // bops bigger and inverts into a solid accent "button" with dark letters.
+      // Availability M W F meter: each letter flips grey -> accent (with a bop
+      // each time one of its day's slots is ticked on); when all three days are
+      // covered, the whole block gives a single bigger pop.
       var TIMES = ['morning', 'midday', 'evening'];
       var REQ_DAYS = ['monday', 'wednesday', 'friday'];
       function dayMet(d) {
@@ -475,10 +475,8 @@
         });
       }
       var mwf = document.querySelector('.mwf');
-      var mwfPrev = {};
-      REQ_DAYS.forEach(function (d) { mwfPrev[d] = false; });
       var mwfPrevAll = false;
-      function updateMwf(animate) {
+      function updateMwf(bounceDay, doAnim) {
         if (!mwf) return;
         var count = 0;
         REQ_DAYS.forEach(function (d) {
@@ -487,23 +485,25 @@
           var letter = mwf.querySelector('[data-day="' + d + '"]');
           if (letter) {
             letter.classList.toggle('is-lit', on);
-            if (animate && on && !mwfPrev[d]) {          // just turned on: little bop
+            if (doAnim && bounceDay === d) {             // a slot for this day was just ticked on: bop
               letter.classList.remove('bop'); void letter.offsetWidth; letter.classList.add('bop');
             }
           }
-          mwfPrev[d] = on;
         });
         mwf.setAttribute('data-met', String(count));
         var all = count === REQ_DAYS.length;
-        if (animate && all && !mwfPrevAll) {             // whole set just completed: big bop
+        if (doAnim && all && !mwfPrevAll) {              // whole set just completed: one bigger pop
           mwf.classList.remove('bigbop'); void mwf.offsetWidth; mwf.classList.add('bigbop');
         }
         mwfPrevAll = all;
       }
       form.querySelectorAll('.avail-cell input[data-slot]').forEach(function (box) {
-        box.addEventListener('change', function () { updateMwf(true); });
+        box.addEventListener('change', function () {
+          var day = box.getAttribute('data-slot').split('_')[0];   // e.g. friday_evening -> friday
+          updateMwf(box.checked ? day : null, true);               // bounce that letter only when ticked ON
+        });
       });
-      updateMwf(false);
+      updateMwf(null, false);
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();

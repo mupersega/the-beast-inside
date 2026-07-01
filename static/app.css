@@ -574,26 +574,20 @@ img { max-width: 100%; display: block; }
 .cta { text-align: center; background: var(--panel); }
 .cta.band { background: var(--panel); }
 /* M W F meter, centred at the foot of the availability box. Each letter is grey
-   until that training day has a time, then it flips to accent (with a bop). When
-   all three are in, the block inverts into a solid accent button - dark letters,
-   drop shadow - with a bigger bop. */
+   until its training day has a time, then it flips to accent (with a bop each
+   time one of that day's slots is ticked on). When all three are covered, the
+   whole block gives one bigger pop - no colour invert, just the scale. */
 .mwf {
   display: flex; width: fit-content; margin: 1.2rem auto 0;
   justify-content: center; gap: 0.55rem; pointer-events: none;
-  padding: 0.4rem 0.95rem; border-radius: 6px; background: transparent;
-  font-family: var(--head); font-weight: 700; font-size: 1.3rem; letter-spacing: 0.14em;
-  transition: background-color .25s ease, box-shadow .3s ease;
+  font-family: var(--head); font-weight: 700; font-size: 1.35rem; letter-spacing: 0.14em;
 }
 .mwf span { display: inline-block; color: var(--muted); transition: color .2s ease; }
 .mwf span.is-lit { color: var(--accent); }
-/* all three in: invert into a solid accent button with dark letters + drop shadow */
-.mwf[data-met="3"] { background: var(--accent); box-shadow: 0 8px 20px rgba(203, 168, 103, 0.35); }
-.mwf[data-met="3"] span { color: var(--ink); }
-/* a little bop when a letter turns on, a bigger one when the set completes */
 @keyframes mwf-bop { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
 .mwf span.bop { animation: mwf-bop .32s cubic-bezier(.3, 1.5, .5, 1); }
-@keyframes mwf-bigbop { 0% { transform: scale(1); } 35% { transform: scale(1.16); } 100% { transform: scale(1); } }
-.mwf.bigbop { animation: mwf-bigbop .42s cubic-bezier(.3, 1.4, .5, 1); }
+@keyframes mwf-bigbop { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
+.mwf.bigbop { animation: mwf-bigbop .44s cubic-bezier(.3, 1.4, .5, 1); }
 .cta-inner { max-width: 44rem; margin: 0 auto; }
 .cta-title { font-family: var(--head); font-weight: 700; font-size: clamp(2.2rem, 7vmin, 3.8rem); text-transform: uppercase; line-height: 1.02; margin: 0.4rem 0 0; color: var(--text); }
 .cta .band-lede { margin-left: auto; margin-right: auto; }
