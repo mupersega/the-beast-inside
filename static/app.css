@@ -447,7 +447,7 @@ img { max-width: 100%; display: block; }
 .phase-pane[hidden] { display: none; }
 .phase-pane { margin-top: 1.4rem; }
 /* form submit error */
-.form-error { margin: 0.9rem 0 0; color: #e3937c; font-size: 0.95rem; }
+.form-error, .avail-error { margin: 0.9rem 0 0; color: #e3937c; font-size: 0.95rem; }
 
 /* trainer */
 .trainer-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(1.5rem, 5vmin, 3.5rem); align-items: center; }
@@ -461,6 +461,27 @@ img { max-width: 100%; display: block; }
 .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
 .trainer-copy .band-eyebrow { margin-top: 0; }
 .trainer-body { margin: 1rem 0 0; max-width: 58ch; color: var(--muted); }
+/* Sam's personal note: a soft frosted panel (not another bordered card) - a
+   translucent, lightly-blurred backing echoing the day-circle text backing. */
+.trainer-quote {
+  position: relative; margin: 1.6rem 0 0; max-width: 60ch;
+  padding: 1.35rem 1.5rem 1.3rem 2.7rem; border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 8%, rgba(255, 255, 255, 0.03));
+  backdrop-filter: blur(8px) saturate(1.1); -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.trainer-quote::before {
+  content: "\201C"; position: absolute; left: 0.75rem; top: 0.5rem;
+  font-family: Georgia, "Times New Roman", serif; font-size: 3rem; line-height: 1;
+  color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.trainer-quote p { margin: 0 0 0.8rem; color: var(--text); font-style: italic; line-height: 1.6; }
+.trainer-quote p:last-of-type { margin-bottom: 0; }
+.trainer-quote cite {
+  display: block; margin-top: 0.9rem; font-style: normal; font-family: var(--head);
+  font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.78rem;
+  color: var(--accent);
+}
 
 /* details */
 .specs { margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); column-gap: clamp(1.5rem, 5vmin, 3.5rem); }
@@ -707,6 +728,9 @@ img { max-width: 100%; display: block; }
 }
 .avail-cell input:checked + .avail-face::after { transform: rotate(45deg) scale(1); }
 .avail-cell input:focus-visible + .avail-face { outline: 2px solid var(--accent); outline-offset: 2px; }
+.avail-row.req::after { content: " *"; color: var(--accent); }
+.avail-req-note { margin: 0.85rem 0 0; color: var(--muted); font-size: 0.8rem; }
+.avail-req-note span { color: var(--accent); font-weight: 700; }
 
 .lead-form button {
   width: 100%; margin-top: 1.6rem;
