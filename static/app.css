@@ -583,14 +583,22 @@ img { max-width: 100%; display: block; }
   font-family: var(--head); font-weight: 700; font-size: 1.35rem; letter-spacing: 0.14em;
   transition: gap .45s cubic-bezier(.2, .8, .2, 1), letter-spacing .45s cubic-bezier(.2, .8, .2, 1);
 }
-.mwf span { display: inline-block; color: #5b6065; transition: color .2s ease; }   /* darker grey off state */
-.mwf span.is-lit { color: var(--accent); }
+/* three colour stages: grey (off) -> muted accent (on, still disparate) ->
+   full accent (locked in, all three clumped) */
+.mwf span { display: inline-block; color: #5b6065; transition: color .25s ease; }
+.mwf span.is-lit { color: color-mix(in srgb, var(--accent) 52%, var(--muted)); }
+.mwf.is-complete span.is-lit { color: var(--accent); }
 /* per-letter bop each time one of its slots is ticked on */
 @keyframes mwf-bop { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
 .mwf span.bop { animation: mwf-bop .32s cubic-bezier(.3, 1.5, .5, 1); }
 /* all three covered (after the last letter's bop settles): the letters slide
-   together and clump up tight to signal locked-in. */
-.mwf.is-complete { gap: 0.03rem; letter-spacing: -0.01em; }
+   together, overshooting to touching, then landing a pixel or two apart. */
+.mwf.is-complete { gap: 0.1rem; letter-spacing: -0.005em; animation: mwf-clump .5s cubic-bezier(.3, .75, .35, 1); }
+@keyframes mwf-clump {
+  0%   { gap: 0.6rem; letter-spacing: 0.14em; }
+  60%  { gap: 0;      letter-spacing: -0.02em; }
+  100% { gap: 0.1rem; letter-spacing: -0.005em; }
+}
 .cta-inner { max-width: 44rem; margin: 0 auto; }
 .cta-title { font-family: var(--head); font-weight: 700; font-size: clamp(2.2rem, 7vmin, 3.8rem); text-transform: uppercase; line-height: 1.02; margin: 0.4rem 0 0; color: var(--text); }
 .cta .band-lede { margin-left: auto; margin-right: auto; }

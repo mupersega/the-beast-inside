@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 **The Beast Inside** — a single-page marketing/landing site for Sam Barker's 8-week
-strength program (Studio 99 Fitness, 387 Montague Rd, West End, Brisbane; men aged
+strength program (Studio 99 Fitness, 993 Stanley St, East Brisbane, Brisbane; men aged
 40–50).
 
 It began as a server-rendered Go binary and is now **also a static-site generator**:
