@@ -15,18 +15,21 @@ database, no third-party Go modules (`go.mod` has no `require` block). Fonts are
 self-hosted; the only external runtime requests are the lead form's POST to Web3Forms
 and a keyless Google Maps embed in the Details section.
 
-Live: **https://mupersega.github.io/the-beast-inside/** (auto-deploys on push to `main`).
+Live: **https://beastinside.com.au** (custom domain on GitHub Pages; the old
+`mupersega.github.io/the-beast-inside/` URL redirects here). Auto-deploys on push to `main`.
 
 ## Real content vs placeholders
 
-The **week-by-week program is real** — Sam's actual plan lives in `phases` in `main.go`
-(Week 1 Foundation → Week 8 Test week, each broken into the three days). Don't treat it
-as scaffolding.
+The **program and most content are real** — Sam's week-by-week plan lives in `phases` in
+`main.go` (Week 1 Foundation → Week 8 Test week, each broken into the three days), and the
+pricing ($800 upfront / $125 a week), start date (3 Aug 2026), ~30-min sessions, venue
+(993 Stanley St, East Brisbane), and Sam's bio + first-person quote are all filled. Don't
+treat any of it as scaffolding.
 
-Still intentional **placeholder**, marked with `[ bracketed ]` text — price, dates/times,
-session length, Sam's bio, real `spotsLeft`. Don't "fix" these by inventing facts; leave
-the markers unless given real content. `og:image` / canonical URL are placeholders until
-the domain is known.
+The one remaining `[ bracketed ]` placeholder is the exact training **times** in the
+Details "When" (`Mon/Wed/Fri · [ times ]`). Also `spotsLeft = -1` still renders a "set me"
+placeholder count. Don't invent facts for these — leave the markers until given real values.
+(`og:image` / canonical are now set to the live `beastinside.com.au` domain.)
 
 ## Commands
 
@@ -70,8 +73,8 @@ Everything server-side lives in **`main.go`** (~310 lines):
   placeholder). To change copy/structure, edit these values **and** the matching template
   together.
 - **`go run . build` → `buildStatic()`** renders `index.html` to `dist/index.html`, writes
-  `.nojekyll`, and copies the embedded `static/` tree into `dist/static/`. That folder is
-  the deployable artifact.
+  `.nojekyll` and a `CNAME` (the `beastinside.com.au` custom domain), and copies the embedded
+  `static/` tree into `dist/static/`. That folder is the deployable artifact.
 - **Server routes** (`net/http`, stdlib mux) are **dev-only**: `/` (`index`), `/day/{n}`
   and `/phase/{n}` (partials), `POST /enquire`. The deployed static site does not use them
   — phase panels toggle in client JS and the form posts to Web3Forms.
@@ -122,6 +125,9 @@ rest are named partials:
 ### Deploy
 
 GitHub Pages via `.github/workflows/deploy.yml` (repo `mupersega/the-beast-inside`): on push
-to `main` it runs `go run . build` and publishes `dist/`. Relative asset paths make it work
-on the `/the-beast-inside/` project sub-path. `DEPLOY.md` has the full steps; it's also fine
-on Cloudflare Pages / Netlify (build `go run . build`, output `dist`).
+to `main` it runs `go run . build` and publishes `dist/`. Served on the custom domain
+**beastinside.com.au** (GoDaddy DNS → GitHub Pages apex A records `185.199.108-111.153`;
+`buildStatic()` writes the `CNAME` so the domain sticks across Actions deploys; HTTPS is
+enforced). Relative asset paths keep it portable (works at the domain root or a project
+sub-path). `DEPLOY.md` has the full steps; it's also fine on Cloudflare Pages / Netlify
+(build `go run . build`, output `dist`).
