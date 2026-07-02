@@ -323,6 +323,10 @@ func buildStatic() error {
 	if err := os.WriteFile(filepath.Join("dist", ".nojekyll"), nil, 0o644); err != nil {
 		return err
 	}
+	// custom domain for GitHub Pages (keeps the domain set across Actions deploys)
+	if err := os.WriteFile(filepath.Join("dist", "CNAME"), []byte("beastinside.com.au\n"), 0o644); err != nil {
+		return err
+	}
 	// copy embedded static/* into dist/static/*
 	return fs.WalkDir(staticFS, "static", func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
