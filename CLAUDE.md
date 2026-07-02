@@ -26,10 +26,10 @@ pricing ($800 upfront / $125 a week), start date (3 Aug 2026), ~30-min sessions,
 (993 Stanley St, East Brisbane), and Sam's bio + first-person quote are all filled. Don't
 treat any of it as scaffolding.
 
-The one remaining `[ bracketed ]` placeholder is the exact training **times** in the
-Details "When" (`Mon/Wed/Fri · [ times ]`). Also `spotsLeft = -1` still renders a "set me"
-placeholder count. Don't invent facts for these — leave the markers until given real values.
-(`og:image` / canonical are now set to the live `beastinside.com.au` domain.)
+No `[ bracketed ]` placeholders remain in the copy — the training **times** show as "TBD"
+in the Details "When" until Sam confirms them. `spotsLeft = -1` still renders a "set me"
+placeholder count (set it 0–8 when an intake opens). (`og:image` / canonical are set to the
+live `beastinside.com.au` domain.)
 
 ## Commands
 
