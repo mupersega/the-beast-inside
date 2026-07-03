@@ -408,6 +408,33 @@
     <p>An 8-week strength program with Sam Barker &middot; Studio 99 Fitness, East Brisbane</p>
   </footer>
 
+  <!-- Hidden print-only flyer: invisible on screen, but a print (Ctrl+P, or the
+       Ctrl/Cmd+Shift+P shortcut) shows just this as an A4 poster to hand out. -->
+  <div class="print-flyer" aria-hidden="true">
+    <p class="pf-eyebrow">Studio 99 Fitness &middot; East Brisbane</p>
+    <p class="pf-brand">The Beast Inside <span class="pf-never">never left</span></p>
+    <h1 class="pf-title">An 8-week strength program<br><span class="pf-for">for men 40-50</span></h1>
+    <p class="pf-lede">Three days a week - barbell, kettlebell and bodyweight. A small group of eight men, coached by Sam Barker.</p>
+    <dl class="pf-specs">
+      <div><dt>When</dt><dd>Mon, Wed &amp; Fri &middot; about 30 min a session</dd></div>
+      <div><dt>Where</dt><dd>Studio 99 Fitness, 993 Stanley St, East Brisbane</dd></div>
+      <div><dt>Starts</dt><dd>3 August 2026 &middot; 8 spots</dd></div>
+      <div><dt>Investment</dt><dd>$800 upfront, or $150 a week</dd></div>
+    </dl>
+    <p class="pf-kicker">The beast never left.</p>
+    <div class="pf-cta">Apply at <b>beastinside.com.au</b></div>
+  </div>
+
+  <script>
+    // Ctrl/Cmd + Shift + P prints the hidden flyer (plain Ctrl+P works too).
+    document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
+        e.preventDefault();
+        window.print();
+      }
+    });
+  </script>
+
   <script>
     // Phase panels: all are rendered inline; show the one whose button is clicked.
     (function () {

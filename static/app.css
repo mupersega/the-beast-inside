@@ -833,3 +833,53 @@ html { scroll-behavior: smooth; }
   .avail-col-text { display: none; }
   .avail-col-icon { width: 1.35rem; height: 1.35rem; }
 }
+
+/* ===========================================================================
+   PRINT-ONLY FLYER  (hidden on screen; a print shows just this as an A4 poster).
+   Visual styles live outside @media so it can be previewed on screen too.
+   =========================================================================== */
+.print-flyer {
+  display: none;                       /* hidden on screen */
+  flex-direction: column;
+  width: 210mm; min-height: 297mm; margin: 0 auto; padding: 18mm 16mm 16mm;
+  box-sizing: border-box;
+  background: var(--bg); color: var(--text); font-family: var(--body);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  body > *:not(.print-flyer) { display: none !important; }
+  .print-flyer { display: flex; }
+}
+.pf-eyebrow {
+  margin: 0 0 8mm; font-family: var(--head); font-weight: 600; font-size: 10pt;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+}
+.pf-brand {
+  margin: 0 0 12mm; font-family: var(--head); font-weight: 700; text-transform: uppercase;
+  font-size: 40pt; letter-spacing: 0.02em; line-height: 1; color: var(--white);
+}
+.pf-never {
+  font-family: var(--script); text-transform: uppercase; font-weight: 600;
+  font-size: 0.46em; letter-spacing: 0.02em; color: var(--accent-2); margin-left: 0.35em;
+}
+.pf-title {
+  margin: 0 0 7mm; font-family: var(--head); font-weight: 700; text-transform: uppercase;
+  font-size: 28pt; line-height: 1.06; color: var(--white);
+}
+.pf-title .pf-for { color: var(--accent); }
+.pf-lede { margin: 0 0 12mm; font-size: 12.5pt; line-height: 1.5; color: var(--muted); max-width: 155mm; }
+.pf-specs { margin: 0; }
+.pf-specs > div {
+  display: grid; grid-template-columns: 34mm 1fr; gap: 5mm; align-items: baseline;
+  padding: 3.5mm 0; border-top: 0.35mm solid var(--line);
+}
+.pf-specs > div:last-child { border-bottom: 0.35mm solid var(--line); }
+.pf-specs dt { font-family: var(--head); font-weight: 600; font-size: 9.5pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.pf-specs dd { margin: 0; font-size: 12.5pt; color: var(--text); }
+.pf-kicker { margin: auto 0 0; font-family: var(--script); font-size: 26pt; color: var(--accent-2); }
+.pf-cta {
+  margin: 8mm 0 0; padding: 6mm; border-radius: 2mm; text-align: center;
+  background: var(--accent); color: var(--ink);
+  font-family: var(--head); font-weight: 700; font-size: 17pt; letter-spacing: 0.05em; text-transform: uppercase;
+}
