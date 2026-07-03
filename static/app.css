@@ -840,11 +840,23 @@ html { scroll-behavior: smooth; }
    =========================================================================== */
 .print-flyer {
   display: none;                       /* hidden on screen */
+  position: relative; overflow: hidden;
   flex-direction: column;
   width: 210mm; min-height: 297mm; margin: 0 auto; padding: 18mm 16mm 16mm;
   box-sizing: border-box;
   background: var(--bg); color: var(--text); font-family: var(--body);
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* Sam's portrait, top-right corner: duotone-tinted to the palette and gradient-
+   masked so its content-facing edges dissolve into the dark page (no box, no
+   hard clip). Content sits above it (z-index). */
+.print-flyer > *:not(.pf-photo) { position: relative; z-index: 1; }
+.pf-photo {
+  position: absolute; z-index: 0; top: 0; right: 0;
+  width: 96mm; height: 156mm; object-fit: cover; object-position: 52% 28%;
+  filter: grayscale(1) contrast(1.06) brightness(0.9) sepia(0.5) saturate(1.7) hue-rotate(-14deg);
+  -webkit-mask-image: radial-gradient(135% 118% at 100% 0%, #000 40%, transparent 76%);
+          mask-image: radial-gradient(135% 118% at 100% 0%, #000 40%, transparent 76%);
 }
 @media print {
   @page { size: A4 portrait; margin: 0; }
