@@ -331,7 +331,8 @@
                      pattern="(\+?61[\s-]?|0)4[\d\s-]{8,}"
                      title="Enter an Australian mobile, e.g. 0412 345 678"></label>
             <label class="field"><span>Age</span>
-              <input type="number" name="age" inputmode="numeric" required></label>
+              <input type="number" name="age" min="40" max="50" inputmode="numeric" required
+                     title="This program is for men aged 40 to 50."></label>
             <label class="field full"><span>Where are you at?</span>
               <select name="experience">
                 <option value="" selected disabled>Choose one&hellip;</option>
@@ -454,6 +455,18 @@
       var form = document.getElementById('lead-form');
       if (!form) return;
       function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      // Friendly message when the age is outside 40-50 (the native min/max still
+      // blocks the submit; this just makes the validation bubble read nicely).
+      var age = form.elements['age'];
+      if (age) {
+        var ageMsg = function () {
+          age.setCustomValidity(
+            (age.validity.rangeUnderflow || age.validity.rangeOverflow)
+              ? 'This program is for men aged 40 to 50.' : '');
+        };
+        age.addEventListener('input', ageMsg);
+        age.addEventListener('invalid', ageMsg);
+      }
       // Availability M W F meter: each letter flips grey -> accent (with a bop
       // each time one of its day's slots is ticked on); once all three days are
       // covered, after the last bop settles, the letters slide together tight
