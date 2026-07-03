@@ -326,10 +326,12 @@
               <input type="text" name="name" autocomplete="name" required></label>
             <label class="field"><span>Email</span>
               <input type="email" name="email" autocomplete="email" required></label>
-            <label class="field"><span>Phone</span>
-              <input type="tel" name="phone" autocomplete="tel"></label>
+            <label class="field"><span>Mobile</span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required
+                     pattern="(\+?61[\s-]?|0)4[\d\s-]{8,}"
+                     title="Enter an Australian mobile, e.g. 0412 345 678"></label>
             <label class="field"><span>Age</span>
-              <input type="number" name="age" min="40" max="50" inputmode="numeric"
+              <input type="number" name="age" min="40" max="50" inputmode="numeric" required
                      title="This program is for men aged 40 to 50."></label>
             <label class="field full"><span>Where are you at?</span>
               <select name="experience">
