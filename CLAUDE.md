@@ -22,7 +22,7 @@ Live: **https://beastinside.com.au** (custom domain on GitHub Pages; the old
 
 The **program and most content are real** — Sam's week-by-week plan lives in `phases` in
 `main.go` (Week 1 Foundation → Week 8 Test week, each broken into the three days), and the
-pricing ($800 upfront / $125 a week), start date (3 Aug 2026), ~30-min sessions, venue
+pricing ($680 upfront / $100 a week), start date (3 Aug 2026), ~30-min sessions, venue
 (993 Stanley St, East Brisbane), and Sam's bio + first-person quote are all filled. Don't
 treat any of it as scaffolding.
 
